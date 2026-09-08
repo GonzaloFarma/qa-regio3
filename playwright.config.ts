@@ -24,6 +24,10 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : undefined,
+  // El admin de VTEX (farma5049) tarda en cargar y despues necesita tiempo de
+  // hidratacion antes de responder a clicks (ver site-editor-regionalizer-panel.page.ts).
+  // El default de 30s no alcanza para navegar el arbol del Site Editor.
+  timeout: 120000,
   reporter: [
     ['list'],
     ['html', { open: 'never' }],

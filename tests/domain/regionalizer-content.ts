@@ -22,6 +22,23 @@ export const REGIONALIZER_DESKTOP_PATH =
   'store.home/$before_header.full/header-layout.desktop/sticky-layout#desktop__header/flex-layout.row#desktop__container-menu/flex-layout.col#desktop__container-menu_header-icons/flex-layout.row#desktop__container-menu_header-icons/flex-layout.col#general__locator/regionalizer';
 
 /**
+ * Cadena de data-tree-path para llegar al panel del bloque desktop desde el
+ * Site Editor, en orden (ancestros primero, termina en REGIONALIZER_DESKTOP_PATH).
+ * Verificada en vivo el 2026-09-08 contra farma5049 con
+ * tests/utils/site-editor-tree.helper.ts#openBlockByTreePath - los 4 clicks
+ * (3 expansiones + 1 click de hoja) llegaron al panel real ("Título de la
+ * primera pantalla", "GUARDAR" presentes). Las etiquetas visibles de cada
+ * nivel: Header Desktop -> Contenedor de menú -> Regionalizador (grupo) ->
+ * Regionalizador (hoja).
+ */
+export const REGIONALIZER_DESKTOP_TREE_CHAIN: string[] = [
+  'store.home/$before_header.full/header-layout.desktop',
+  'store.home/$before_header.full/header-layout.desktop/sticky-layout#desktop__header/flex-layout.row#desktop__container-menu',
+  'store.home/$before_header.full/header-layout.desktop/sticky-layout#desktop__header/flex-layout.row#desktop__container-menu/flex-layout.col#desktop__container-menu_header-icons/flex-layout.row#desktop__container-menu_header-icons/flex-layout.col#general__locator',
+  REGIONALIZER_DESKTOP_PATH,
+];
+
+/**
  * Instancia sin contentMapId ni contenido (content: {}), anidada dentro del
  * arbol desktop bajo un responsive-layout.mobile#logo. No confirmado si es
  * codigo muerto o se activa bajo alguna condicion no observada (ver issue).

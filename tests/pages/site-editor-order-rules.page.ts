@@ -1,84 +1,97 @@
 import type { Page, Locator } from '@playwright/test';
+import { findSiteEditorAppFrame } from '../utils/site-editor-tree.helper';
+import { fieldByCaption } from '../utils/site-editor-field.helper';
 
 /**
  * Page Object del panel "Orden del listado de sucursales (retiro)" y su
  * editor de criterio anidado. Etiquetas verificadas contra
  * TQD-1128/orden-chips-site-editor.png (transcritas en
- * docs/vtex/site-editor-panels-transcripcion.md).
+ * docs/vtex/site-editor-panels-transcripcion.md). No probado en vivo con un
+ * criterio real abierto (ver SiteEditorChipsPage/SiteEditorRegionalizerPanelPage
+ * para los patrones ya confirmados: fieldByCaption + frame del iframe
+ * admin/app/cms/site-editor).
  *
- * Importante (ver docs/issues/2026-09-08-instancias-y-esquemas-regionalizer.md
- * #3): este panel edita, con alta probabilidad, el campo `ordenamientos`
- * (nombres de campo en español) y NO `sortRules` (inglés) — evidencia fuerte
- * por coincidencia de labels, no confirmacion 100%.
+ * CORREGIDO 2026-09-08 (ver docs/issues/2026-09-08-instancias-y-esquemas-regionalizer.md
+ * #3): la sesion anterior de esta misma fecha infirio por coincidencia de
+ * labels que este panel editaba `ordenamientos`. Al abrir el panel real en
+ * vivo, la regla listada es **"QA - Más stock primero"** — el
+ * `__editorItemTitle` real de `sortRules`, no el de `ordenamientos`
+ * ("Colegiales"). Es decir: **este panel edita `sortRules`**, no
+ * `ordenamientos`. Sigue sin confirmarse con desarrollo cual es cual en el
+ * codigo del componente.
  */
 export class SiteEditorOrderRulesPage {
   constructor(private readonly page: Page) {}
 
-  get agregarReglaButton(): Locator {
-    return this.page.getByRole('button', { name: 'AGREGAR' }).first();
+  private frame() {
+    return findSiteEditorAppFrame(this.page);
   }
 
-  reglaPorNombre(nombre: string): Locator {
-    return this.page.getByText(nombre, { exact: true });
+  async agregarReglaButton(): Promise<Locator> {
+    return (await this.frame()).getByRole('button', { name: 'AGREGAR' }).first();
+  }
+
+  async reglaPorNombre(nombre: string): Promise<Locator> {
+    return (await this.frame()).getByText(nombre, { exact: true });
   }
 
   // --- Editor de regla ---
 
-  get nombreDeLaReglaInput(): Locator {
-    return this.page.getByLabel('Nombre de la regla (sólo para identificarla acá)');
+  async nombreDeLaReglaInput(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Nombre de la regla (sólo para identificarla acá)');
   }
 
-  get provinciaDondeAplicaInput(): Locator {
-    return this.page.getByLabel('Provincia donde aplica');
+  async provinciaDondeAplicaInput(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Provincia donde aplica');
   }
 
-  get localidadDondeAplicaInput(): Locator {
-    return this.page.getByLabel('Localidad donde aplica');
+  async localidadDondeAplicaInput(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Localidad donde aplica');
   }
 
-  get aplicarABusquedaPorDireccionToggle(): Locator {
-    return this.page.getByLabel('Aplicar a la búsqueda por dirección');
+  async aplicarABusquedaPorDireccionToggle(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Aplicar a la búsqueda por dirección');
   }
 
-  get criteriosDeOrdenAgregarButton(): Locator {
-    return this.page.getByRole('button', { name: 'AGREGAR' }).last();
+  async criteriosDeOrdenAgregarButton(): Promise<Locator> {
+    return (await this.frame()).getByRole('button', { name: 'AGREGAR' }).last();
   }
 
   /** Único APLICAR visible en el editor de regla (antes de abrir un criterio). */
-  get aplicarReglaButton(): Locator {
-    return this.page.getByRole('button', { name: 'APLICAR' }).first();
+  async aplicarReglaButton(): Promise<Locator> {
+    return (await this.frame()).getByRole('button', { name: 'APLICAR' }).first();
   }
 
   // --- Editor de criterio (al presionar criteriosDeOrdenAgregarButton) ---
 
-  get nombreDelCriterioInput(): Locator {
-    return this.page.getByLabel('Nombre del criterio (sólo para identificarlo acá)');
+  async nombreDelCriterioInput(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Nombre del criterio (sólo para identificarlo acá)');
   }
 
   /** Valor visto: "MasterData (datos de...)". */
-  get origenDelDatoSelect(): Locator {
-    return this.page.getByLabel('Origen del dato');
+  async origenDelDatoSelect(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Origen del dato');
   }
 
-  get campoDeMasterDataInput(): Locator {
-    return this.page.getByLabel('Campo de MasterData');
+  async campoDeMasterDataInput(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Campo de MasterData');
   }
 
   /** Valor visto: "Demora de entrega (e...)". */
-  get campoDeVtexSelect(): Locator {
-    return this.page.getByLabel('Campo de VTEX (si el origen es VTEX)');
+  async campoDeVtexSelect(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Campo de VTEX (si el origen es VTEX)');
   }
 
   /** Valor visto: "es igual a". */
-  get comoOrdenaEsteCriterioSelect(): Locator {
-    return this.page.getByLabel('Cómo ordena este criterio');
+  async comoOrdenaEsteCriterioSelect(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Cómo ordena este criterio');
   }
 
-  get valorDeComparacionInput(): Locator {
-    return this.page.getByLabel('Valor de comparación');
+  async valorDeComparacionInput(): Promise<Locator> {
+    return fieldByCaption(await this.frame(), 'Valor de comparación');
   }
 
-  get aplicarCriterioButton(): Locator {
-    return this.page.getByRole('button', { name: 'APLICAR' }).last();
+  async aplicarCriterioButton(): Promise<Locator> {
+    return (await this.frame()).getByRole('button', { name: 'APLICAR' }).last();
   }
 }

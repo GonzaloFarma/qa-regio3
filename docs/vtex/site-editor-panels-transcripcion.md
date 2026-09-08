@@ -1,6 +1,8 @@
 # Transcripción de los paneles del Site Editor (de capturas reales)
 
-Fuente: capturas de pantalla ya existentes en `TQD-1128/` (`config-site-editor.png`, `chips-site-editor.png`, `orden-chips-site-editor.png`), tomadas por el usuario antes de esta sesión — fecha exacta no registrada en el nombre de archivo. Transcritas a texto acá para que un agente futuro no dependa de releer las imágenes. **Las etiquetas son reales** (texto visible en pantalla); **la wiring exacta de accesibilidad** (si `<label for>` asocia bien cada campo para que `getByLabel()` funcione tal cual) **no está confirmada** — sólo lectura de captura, no inspección de DOM en vivo.
+Fuente: capturas de pantalla ya existentes en `TQD-1128/` (`config-site-editor.png`, `chips-site-editor.png`, `orden-chips-site-editor.png`), tomadas por el usuario antes de esta sesión — fecha exacta no registrada en el nombre de archivo. Transcritas a texto acá para que un agente futuro no dependa de releer las imágenes. **Las etiquetas son reales** (texto visible en pantalla).
+
+**Actualización 2026-09-08 — wiring de accesibilidad confirmado en vivo:** abrir el panel real reveló que `getByLabel()` directo NO sirve acá: varios campos tienen texto de ayuda dentro del mismo `<label>`, lo que diluye el nombre accesible que computa el navegador. La solución verificada (`fieldByCaption` en `tests/utils/site-editor-field.helper.ts`) ubica el campo por su caption exacto y sube al `<label>` ancestro por XPath — probada contra los 3 tipos de campo (texto, toggle, select) del panel de chips y el panel raíz, con `count: 1` en cada uno. El panel del bloque desktop completo (navegación de árbol + AGREGAR chip + varios campos) se abrió de punta a punta con el fixture real de Playwright — ver `tests/pages/site-editor-chips.page.ts` y `site-editor-regionalizer-panel.page.ts`.
 
 ## Árbol de bloques (confirma la ruta de `docs/vtex/regionalizer-block-instances.md`)
 

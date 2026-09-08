@@ -8,11 +8,13 @@ Cubre exclusivamente los 30 casos documentados en `TQD-1128_TestCases_Chips_Refo
 
 Este repo es independiente de `qa-automation-api`: ese proyecto automatiza otra historia (FARMA-5084/TQD-1127, contra producción). No se portó código de tests desde ahí, solo convenciones genéricas (ver `CONVENCIONES.md`).
 
-## Estado actual: scaffold, no ejecutable todavía
+## Estado actual: scaffold, selectores del bloque desktop confirmados
 
-Los 30 casos existen como `test.fixme(...)` en `tests/specs/`, organizados por módulo. Cada uno documenta objetivo y referencia, pero **la implementación real está pendiente**: los Page Objects (`tests/pages/`) tienen locators marcados `TODO` porque todavía no se inspeccionó el DOM real de `farma5049`. El mecanismo de login sí está resuelto (ver "Uso" abajo), no así los selectores. No asumir que algo "funciona" solo porque compila o porque Playwright lo lista.
+Los 30 casos existen como `test.fixme(...)` en `tests/specs/`, organizados por módulo. **Ningún `test.fixme` fue convertido a `test` todavía** — eso sigue pendiente. Pero a diferencia del scaffold inicial, los selectores de `SiteEditorChipsPage` y `SiteEditorRegionalizerPanelPage` (instancia desktop) ya fueron verificados en vivo contra `farma5049` el 2026-09-08: navegación real del árbol, apertura del panel, y lectura de campos vía el fixture real de Playwright (no solo capturas de pantalla). Ver `docs/vtex/site-editor-panels-transcripcion.md` para el detalle de cómo.
 
-Para implementar un caso: abrir `TQD-1128_TestCases_Chips_Reformulados.md` (o `Plan_TestCases_Chips.md` para el detalle de TC-CHIP-01), inspeccionar el flujo real en `farma5049`, confirmar/actualizar los locators en `tests/pages/`, y recién ahí sacar el `test.fixme` por `test(`.
+**Sigue pendiente:** `SiteEditorOrderRulesPage` y la variante mobile (header y drawer) no fueron probadas en vivo todavía — mismo patrón (`fieldByCaption` + `findSiteEditorAppFrame`), pero sin confirmar. No había ningún chip existente al verificar (el de la captura vieja ya no está), así que `chipRowByName` tampoco está probado contra un chip real.
+
+Para implementar un caso: abrir `TQD-1128_TestCases_Chips_Reformulados.md` (o `Plan_TestCases_Chips.md` para el detalle de TC-CHIP-01), usar los Page Objects ya confirmados como base, y recién ahí sacar el `test.fixme` por `test(`.
 
 ## Uso
 
