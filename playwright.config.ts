@@ -1,9 +1,22 @@
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
 
+import 'dotenv/config';
+
 // QA_BASE_URL apunta al workspace de desarrollo farma5049, no a produccion.
-// No hay dotenv como dependencia todavia: si se necesita cargar .env automaticamente,
-// agregar `dotenv` como devDependency y llamar a su config() aca antes de leer process.env.
 const baseURL = process.env.QA_BASE_URL ?? 'https://farma5049--farmacityar.myvtex.com';
+
+// farma5049 exige login + 2FA de VTEX Admin (no automatizable): la sesion se
+// captura a mano una vez con `npm run auth:save` (scripts/save-workspace-auth.js)
+// y se reutiliza desde aca. Si el archivo todavia no existe, se corre sin
+// sesion — los tests que necesiten estar autenticados van a fallar o quedar
+// bloqueados por el gate de admin-login hasta que se corra auth:save.
+const storageStatePath = path.resolve(
+  __dirname,
+  process.env.QA_STORAGE_STATE ?? '.auth/farma5049.json',
+);
+const storageState = fs.existsSync(storageStatePath) ? storageStatePath : undefined;
 
 export default defineConfig({
   testDir: './tests/specs',
@@ -17,6 +30,7 @@ export default defineConfig({
   ],
   use: {
     baseURL,
+    storageState,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

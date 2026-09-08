@@ -78,10 +78,20 @@ empezar con `precondicion:` cuando se empiece a usar, para distinguirlo de una
 regresión real. Ninguno de los dos reemplaza registrar el resultado en
 `TQD-1128_TestCases_Chips_Reformulados.md`.
 
+## Sesión y login
+
+`farma5049` es workspace development: exige login + 2FA de VTEX Admin, no
+automatizable de punta a punta. `npm run auth:save` abre un browser real,
+completás el login a mano, y guarda `storageState` en `.auth/` (gitignorado).
+`playwright.config.ts` lo carga solo si el archivo existe. La sesión expira;
+cuando el gate de admin-login vuelve a aparecer, repetir `auth:save`. Esto
+resuelve correr localmente con un humano presente al inicio — **no** resuelve
+CI desatendido (ver README, sección "Uso").
+
 ## Antes de sacar un `test.fixme()`
 
 1. Confirmar el locator real contra `farma5049` (Site Editor y storefront) —
    ninguno de los que trae el scaffold inicial fue verificado.
-2. Confirmar el mecanismo de login real (`.env.example` lo deja pendiente).
+2. Correr `npm run auth:save` si no hay sesión vigente todavía.
 3. `npm run verify` en verde.
 4. Recién ahí, `test.fixme` → `test`.

@@ -8,10 +8,12 @@ interface FarmacityFixtures {
 }
 
 /**
- * TODO (pendiente de inspeccion real): este fixture todavia no autentica contra el admin
- * de farma5049. El mecanismo real (SSO, usuario/clave, token de VTEX IO) no esta
- * confirmado - ver .env.example. Hasta resolverlo, los Page Objects reciben la `page` tal
- * cual la entrega Playwright, sin sesion iniciada.
+ * La autenticacion NO pasa por este fixture: farma5049 exige login + 2FA de
+ * VTEX Admin, asi que la sesion se captura a mano una vez con `npm run
+ * auth:save` (scripts/save-workspace-auth.js) y playwright.config.ts la carga
+ * como `use.storageState` para toda la corrida. Si no se corrio auth:save
+ * todavia (o la sesion expiro), la `page` que reciben estos Page Objects va a
+ * pegar contra el gate de admin-login.
  */
 export const test = base.extend<FarmacityFixtures>({
   siteEditorChips: async ({ page }, use) => {

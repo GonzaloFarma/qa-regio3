@@ -11,19 +11,27 @@
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit",
     "lint:tests": "node scripts/lint-tests.js",
-    "verify": "npm run typecheck && npm run lint:tests"
+    "verify": "npm run typecheck && npm run lint:tests",
+    "auth:save": "node scripts/save-workspace-auth.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GonzaloFarma/qa-regio3.git"
   },
-  "keywords": ["playwright", "qa", "regionalizador", "farmacity", "TQD-1128"],
+  "keywords": [
+    "playwright",
+    "qa",
+    "regionalizador",
+    "farmacity",
+    "TQD-1128"
+  ],
   "author": "",
   "license": "UNLICENSED",
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.5.0",
+    "dotenv": "^17.4.2",
     "typescript": "^7.0.2"
   }
 }
