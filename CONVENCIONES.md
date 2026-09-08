@@ -63,11 +63,26 @@ tests/specs/ → tests/pages/ → tests/domain/ (+ tests/utils/ cuando haga falt
 - `tests/specs/` — escenarios (los 30 TC-CHIP), tags, assertions de negocio.
   Sin selectores inline: eso es lo que corta RULE-4.
 - `tests/pages/` — Page Objects: selectores, esperas y acciones de UI.
-- `tests/domain/` — `chip-cases.ts`, la metadata de los 30 casos.
-- `tests/utils/` — todavía no existe. Crear cuando haga falta un cliente VTEX,
-  una precondición reutilizable o un oráculo — no antes.
+- `tests/domain/` — `chip-cases.ts` (metadata de los 30 casos) y
+  `regionalizer-content.ts` (schema del contenido real del bloque, verificado
+  contra farma5049 — ver `docs/vtex/`).
+- `tests/utils/` — `vtex-runtime.helper.ts`, lectura headless del runtime de
+  Site Editor. Agregar más solo cuando haga falta un cliente VTEX, una
+  precondición reutilizable o un oráculo nuevo — no antes.
 
 Un Page Object nunca importa un spec.
+
+## Qué va a `tests/domain/` y qué no
+
+Adaptado de la misma fuente que el resto de este documento. `tests/domain/`
+modela comportamiento **estable y verificado**, no datos vivos (chips
+configurados hoy, stock, sucursales habilitadas — eso se consulta en runtime,
+no se hardcodea). Cada archivo lleva encabezado con `@source` (de dónde salió
+el dato), `@lastValidated` (fecha de la última verificación real, no de la
+última edición del archivo) y `@validatedBy` si corresponde. No inventar un
+valor de negocio: si el dato no está verificado, se documenta como pendiente
+en vez de adivinarlo. Ver `docs/vtex/` y `docs/issues/` para el detalle de
+cómo se verificó cada cosa.
 
 ## `test.fixme()` vs `test.skip()`
 

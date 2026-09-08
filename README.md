@@ -43,11 +43,20 @@ resolver a la fecha de este scaffold).
 
 ```
 tests/
-├── domain/chip-cases.ts       # metadata de los 30 TC-CHIP (snapshot de cases.json, Rev. 2 08/09/2026)
-├── fixtures/farmacity-test.ts # extiende el test base con Page Objects inyectados
-├── pages/                     # Page Objects (Site Editor y barra del storefront)
-└── specs/                     # un archivo por módulo, con los test.fixme de cada caso
+├── domain/
+│   ├── chip-cases.ts              # metadata de los 30 TC-CHIP (snapshot de cases.json, Rev. 2 08/09/2026)
+│   └── regionalizer-content.ts    # schema del contenido real del bloque, verificado headless (ver docs/vtex/)
+├── utils/vtex-runtime.helper.ts   # lectura headless del runtime de Site Editor (sin clickear UI)
+├── fixtures/farmacity-test.ts     # extiende el test base con Page Objects inyectados
+├── pages/                         # Page Objects (Site Editor y barra del storefront)
+└── specs/                         # un archivo por módulo, con los test.fixme de cada caso
+
+docs/
+├── vtex/      # hallazgos técnicos verificados (mecanismo __pickRuntime, instancias reales del bloque)
+└── issues/    # discrepancias encontradas (AAAA-MM-DD-slug.md), para que un agente futuro tenga contexto
 ```
+
+Antes de tocar el Site Editor a ciegas, leer `docs/vtex/README.md` — documenta cómo leer la configuración real de cualquier bloque vía API, sin abrir un browser visible ni clickear.
 
 ## Fuente de verdad de los datos de casos
 
