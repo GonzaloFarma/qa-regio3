@@ -1,7 +1,10 @@
-import type { Page, Locator } from '@playwright/test';
+import type { Page, Locator, Frame } from '@playwright/test';
 import { findSiteEditorAppFrame, openBlockByTreePath } from '../utils/site-editor-tree.helper';
 import { fieldByCaption } from '../utils/site-editor-field.helper';
-import { REGIONALIZER_DESKTOP_TREE_CHAIN } from '../domain/regionalizer-content';
+import {
+  REGIONALIZER_DESKTOP_TREE_CHAIN,
+  REGIONALIZER_MOBILE_DRAWER_TREE_CHAIN,
+} from '../domain/regionalizer-content';
 
 /**
  * Page Object del panel raiz "Regionalizador" en Site Editor.
@@ -25,7 +28,12 @@ export class SiteEditorRegionalizerPanelPage {
    * Asume que `page` ya esta en /admin/cms/site-editor (o navega a esa URL
    * si no).
    */
-  async openDesktop(): Promise<void> {
+  /**
+   * Navega a /admin/cms/site-editor si `page` no esta ahi ya, y espera a que
+   * el arbol este listo. Devuelve el frame ya resuelto (la navegacion tiene
+   * que pasar ANTES de buscar el iframe, no al reves).
+   */
+  private async gotoSiteEditorAndWaitTree(anyTopLevelLabel: string): Promise<Frame> {
     if (!this.page.url().includes('/admin/cms/site-editor')) {
       // Ruta relativa: Playwright la resuelve contra use.baseURL del config.
       await this.page.goto(process.env.QA_SITE_EDITOR_PATH ?? '/admin/cms/site-editor', {
@@ -35,13 +43,29 @@ export class SiteEditorRegionalizerPanelPage {
     const frame = await this.frame();
     // El tiempo de carga inicial del admin de VTEX es variable (verificado en vivo:
     // a veces resuelve en ~15s, a veces tarda mas) - margen generoso a proposito.
-    await frame.getByText('Header Desktop', { exact: true }).waitFor({ state: 'visible', timeout: 45000 });
+    await frame.getByText(anyTopLevelLabel, { exact: true }).waitFor({ state: 'visible', timeout: 45000 });
     // lint-disable: RULE-3 — las filas del arbol son visibles en el DOM antes de que
     // React termine de hidratar sus handlers de click; no se encontro una señal
     // observable de "hidratado" distinta de esperar. Verificado en vivo el 2026-09-08:
     // clicks antes de este punto no tienen ningun efecto (ni error, ni cambio de estado).
     await this.page.waitForTimeout(10000);
+    return frame;
+  }
+
+  async openDesktop(): Promise<void> {
+    const frame = await this.gotoSiteEditorAndWaitTree('Header Desktop');
     await openBlockByTreePath(frame, REGIONALIZER_DESKTOP_TREE_CHAIN);
+  }
+
+  /**
+   * Instancia mobile-drawer (ver docs/vtex/regionalizer-block-instances.md #4).
+   * El arbol real difiere de lo que sugeria la captura vieja: el hijo de
+   * "Barra de Navegación Mobile" es "Menú", y "Menu Mobile" aparece un nivel
+   * mas abajo dentro de "Menú" (no directo bajo Barra de Navegación).
+   */
+  async openMobileDrawer(): Promise<void> {
+    const frame = await this.gotoSiteEditorAndWaitTree('Header Mobile');
+    await openBlockByTreePath(frame, REGIONALIZER_MOBILE_DRAWER_TREE_CHAIN);
   }
 
   async atrasLink(): Promise<Locator> {

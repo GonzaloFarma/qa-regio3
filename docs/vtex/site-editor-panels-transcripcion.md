@@ -20,7 +20,19 @@ Header Mobile
                 └── Regionalizador  ← esta es la variante DRAWER (instancia #4 del doc de instancias)
 ```
 
-No se ve en la captura una rama separada para la instancia mobile-header (#3, fuera del drawer) — puede estar en otra parte del árbol no expandida en la imagen.
+**Corregido 2026-09-08, navegando el árbol real en vivo:** el nivel intermedio de la captura estaba mal — el hijo directo de "Barra de Navegación Mobile" es **"Menú"**, no "Menu Mobile". "Menu Mobile" existe, pero un nivel más abajo, adentro de "Menú". Árbol real, confirmado clic a clic y con cada `data-tree-path` verificado contra `REGIONALIZER_MOBILE_DRAWER_PATH`:
+
+```
+Header Mobile
+└── Barra de Navegación Mobile
+    └── Menú
+        └── Menu Mobile
+            └── Container Drawer
+                └── Regionalizador
+                    └── Regionalizador  ← variante DRAWER, panel abierto y confirmado con el fixture real
+```
+
+Ver `tests/domain/regionalizer-content.ts` (`REGIONALIZER_MOBILE_DRAWER_TREE_CHAIN`) y `SiteEditorRegionalizerPanelPage.openMobileDrawer()`. No se encontró todavía una rama separada para la instancia mobile-header (#3, fuera del drawer) — puede estar en otra parte del árbol no explorada.
 
 ## Panel raíz "Regionalizador" (config-site-editor.png)
 

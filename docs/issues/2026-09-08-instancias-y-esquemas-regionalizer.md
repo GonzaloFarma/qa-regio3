@@ -38,8 +38,10 @@ La guía visual (`docs/guia-visual-regionalizador.md`, sección 10) describe el 
 
 **Impacto:** cualquier test case de banner debería confirmar con desarrollo cuál campo controla el comportamiento real antes de automatizarse, para no terminar validando un campo que ya no tiene efecto.
 
-## 5. Las instancias mobile no exponen `chips`/`sortRules`/`banner` en absoluto
+## 5. Las instancias mobile no exponen `chips`/`sortRules`/`banner` en el `content` guardado — RESUELTO
 
-A diferencia de desktop (17 campos), ambas instancias mobile solo tienen 6 campos (`labelPickup`, `iconPickup`, `title`, `shippingMethods`, `customMessage`, `freeShippingAmount`). No hay evidencia en el dato de que el schema de contenido mobile permita configurar chips, orden o banner — podría ser que nunca se tocó esa sección en mobile (los campos simplemente no se guardaron todavía) o que el schema declarado para esas instancias es distinto/más chico.
+A diferencia de desktop (17 campos), ambas instancias mobile solo tienen 6 campos guardados (`labelPickup`, `iconPickup`, `title`, `shippingMethods`, `customMessage`, `freeShippingAmount`). La duda era si el schema de contenido mobile directamente no permite configurar chips/orden/banner, o si simplemente nunca se guardó nada ahí.
+
+**Resuelto 2026-09-08, abriendo el panel real de la instancia mobile-drawer:** el formulario **sí** ofrece "Mostrar la barra de filtros (chips)", "Chips (filtros del listado de sucursales)", "Orden del listado de sucursales (retiro)" y "Banner promocional del modal" — mismas secciones que desktop, mismo schema. La explicación es la más simple: nadie configuró y guardó esas secciones para esta instancia todavía; el `content` de 6 campos no es un límite del schema, es solo lo que se llegó a guardar.
 
 **Impacto:** antes de dar por buena una automatización de TC-CHIP-19 en mobile, confirmar si la barra de chips existe conceptualmente en mobile o si es exclusiva de desktop.

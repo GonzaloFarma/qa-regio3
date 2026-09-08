@@ -54,6 +54,32 @@ export const REGIONALIZER_MOBILE_HEADER_PATH =
 export const REGIONALIZER_MOBILE_DRAWER_PATH =
   'store.home/$before_header.full/header-layout.mobile/flex-layout.row#mobile-nav-bar/flex-layout.col#mobile-menu-drawer-btn/flex-layout.col#menu-logo__drawer/drawer#menu-logo__drawer/flex-layout.row#menu-logo__drawer--container/flex-layout.col#drawer__container--items/flex-layout.col#general__locator/regionalizer';
 
+/**
+ * Cadena de data-tree-path para llegar al panel del bloque mobile-drawer,
+ * verificada en vivo el 2026-09-08 (mismo metodo que REGIONALIZER_DESKTOP_TREE_CHAIN).
+ * Etiquetas reales del arbol, distintas de lo que sugeria la captura vieja
+ * (TQD-1128/config-site-editor.png decia "Menu Mobile" como hijo directo de
+ * "Barra de Navegación Mobile"; en vivo el hijo real es "Menú", y "Menu Mobile"
+ * aparece un nivel mas abajo, dentro de "Menú"):
+ * Header Mobile -> Barra de Navegación Mobile -> Menú -> Menu Mobile ->
+ * Container Drawer -> Regionalizador (grupo) -> Regionalizador (hoja).
+ *
+ * El panel resultante SI ofrece las secciones Chips/Orden/Banner en el
+ * formulario (mismo schema que desktop) - contradice la sospecha anterior
+ * (issue #5) de que mobile no exponia esas secciones. Lo que pasa es mas
+ * simple: nadie guardo contenido en esas secciones para esta instancia
+ * todavia, por eso el content vía API viene con solo 6 campos.
+ */
+export const REGIONALIZER_MOBILE_DRAWER_TREE_CHAIN: string[] = [
+  'store.home/$before_header.full/header-layout.mobile',
+  'store.home/$before_header.full/header-layout.mobile/flex-layout.row#mobile-nav-bar',
+  'store.home/$before_header.full/header-layout.mobile/flex-layout.row#mobile-nav-bar/flex-layout.col#mobile-menu-drawer-btn',
+  'store.home/$before_header.full/header-layout.mobile/flex-layout.row#mobile-nav-bar/flex-layout.col#mobile-menu-drawer-btn/flex-layout.col#menu-logo__drawer',
+  'store.home/$before_header.full/header-layout.mobile/flex-layout.row#mobile-nav-bar/flex-layout.col#mobile-menu-drawer-btn/flex-layout.col#menu-logo__drawer/drawer#menu-logo__drawer/flex-layout.row#menu-logo__drawer--container',
+  'store.home/$before_header.full/header-layout.mobile/flex-layout.row#mobile-nav-bar/flex-layout.col#mobile-menu-drawer-btn/flex-layout.col#menu-logo__drawer/drawer#menu-logo__drawer/flex-layout.row#menu-logo__drawer--container/flex-layout.col#drawer__container--items/flex-layout.col#general__locator',
+  REGIONALIZER_MOBILE_DRAWER_PATH,
+];
+
 export const REGIONALIZER_COMPONENT = 'farmacityar.regionalizer@0.0.94/Regionalizer';
 
 interface ShippingMethodContent {
