@@ -9,6 +9,6 @@ Hallazgos verificados contra `farma5049` (headless, vía API de runtime — nunc
 | [`site-editor-panels-transcripcion.md`](site-editor-panels-transcripcion.md) | Transcripción a texto de las capturas reales del panel de edición (`TQD-1128/*.png`): etiquetas exactas de cada campo, para no depender de releer imágenes. |
 | [`site-editor-ui-interaction.md`](site-editor-ui-interaction.md) | **Leer antes de verificar un panel nuevo.** Metodología: arquitectura de iframes, navegación del árbol, hidratación de React, por qué `getByLabel` directo no sirve y qué usar en su lugar, valores por defecto sorpresivos. |
 
-Ver también [`../issues/`](../issues/) para discrepancias y ambigüedades encontradas durante esta investigación, y [`../guia-visual-regionalizador.md`](../guia-visual-regionalizador.md) para el resumen funcional de la guía original.
+Ver también [`../issues/`](../issues/) para discrepancias, ambigüedades y gaps de verificación encontrados (incluido [un botón que no responde al click](../issues/2026-09-08-agregar-criterio-sin-efecto.md) pese a tener el selector correcto), y [`../guia-visual-regionalizador.md`](../guia-visual-regionalizador.md) para el resumen funcional de la guía original.
 
 **Regla de estos documentos:** todo lo que dice "verificado" viene de una respuesta real de la API, con fecha. Si releés esto más adelante y algo no coincide con lo que ves en `farma5049`, confiá en lo que ves ahora — esto es una foto, no una fuente viva.

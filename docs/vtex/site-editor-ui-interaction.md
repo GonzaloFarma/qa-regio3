@@ -82,6 +82,12 @@ Probado contra los 3 tipos de campo que existen en estos paneles (texto simple, 
 
 Para botones (`AGREGAR`, `APLICAR`, `GUARDAR`, `CANCELAR`) el patrón es al revés: **no** usar `exact:true`. El accessible name de `AGREGAR` no es la palabra pelada (probablemente lleva un ícono) — `getByRole('button', {name:'AGREGAR', exact:true})` da `0`, sin `exact` da los 3 esperados (Chips/Orden/Banner, en ese orden).
 
+**Ojo con `.first()`/`.last()`/`.nth()` sobre botones repetidos cuando hay paneles anidados.** Al abrir un sub-panel (ej. una regla de orden dentro del panel raíz), el panel raíz **no se desmonta** — sigue en el DOM detrás. Con una regla abierta había **4** botones "AGREGAR" (3 del panel raíz + 1 del sub-panel), no 1. Contar (`.count()`) antes de asumir que `.last()`/`.first()` apunta al que se espera; mejor todavía, ubicar por texto cercano (`.locator('label, div', {has: getByText(caption, {exact:true})})`) que por posición.
+
+## 4.1 — Un selector correcto no garantiza que el click funcione
+
+Ver [`../issues/2026-09-08-agregar-criterio-sin-efecto.md`](../issues/2026-09-08-agregar-criterio-sin-efecto.md): un botón ubicado con `count: 1` y contexto de texto verificado puede seguir sin responder al click, y no siempre es el problema de hidratación de la sección 3 (se descartó agregando la misma espera que sí resuelve ese caso, sin efecto acá). No asumir que "conté 1 y hago force:true" es sinónimo de "funciona" — confirmar con un cambio de estado real (longitud de texto, aparición de un campo nuevo), no con la ausencia de error del click.
+
 ## 5. El framework es react-jsonschema-form (rjsf)
 
 Se ve en el DOM: `<form class="rjsf">`, wrappers `<div class="form-group field field-string">` / `field-boolean` / `field-object` etc. Esto explica el patrón uniforme de "cada campo es una unidad con label+control+ayuda opcional" — útil sabrelo si hace falta un selector nuevo que `fieldByCaption` no cubra (ej. un array field de rjsf tiene su propio patrón de `+`/`-` para agregar/quitar ítems, no probado todavía acá).

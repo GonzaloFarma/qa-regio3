@@ -4,21 +4,30 @@ import { fieldByCaption } from '../utils/site-editor-field.helper';
 
 /**
  * Page Object del panel "Orden del listado de sucursales (retiro)" y su
- * editor de criterio anidado. Etiquetas verificadas contra
- * TQD-1128/orden-chips-site-editor.png (transcritas en
- * docs/vtex/site-editor-panels-transcripcion.md). No probado en vivo con un
- * criterio real abierto (ver SiteEditorChipsPage/SiteEditorRegionalizerPanelPage
- * para los patrones ya confirmados: fieldByCaption + frame del iframe
- * admin/app/cms/site-editor).
+ * editor de criterio anidado.
+ *
+ * VERIFICADO en vivo el 2026-09-08 contra la regla real "QA - Más stock
+ * primero" (existe en farma5049, no hubo que crearla): reglaPorNombre,
+ * nombreDeLaReglaInput, provinciaDondeAplicaInput (="Chaco"),
+ * localidadDondeAplicaInput (="Resistencia"), aplicarABusquedaPorDireccionToggle
+ * y aplicarReglaButton resolvieron correctamente con valores reales.
  *
  * CORREGIDO 2026-09-08 (ver docs/issues/2026-09-08-instancias-y-esquemas-regionalizer.md
  * #3): la sesion anterior de esta misma fecha infirio por coincidencia de
- * labels que este panel editaba `ordenamientos`. Al abrir el panel real en
- * vivo, la regla listada es **"QA - Más stock primero"** — el
- * `__editorItemTitle` real de `sortRules`, no el de `ordenamientos`
- * ("Colegiales"). Es decir: **este panel edita `sortRules`**, no
- * `ordenamientos`. Sigue sin confirmarse con desarrollo cual es cual en el
- * codigo del componente.
+ * labels que este panel editaba `ordenamientos`. Al abrir el panel real, la
+ * regla listada es **"QA - Más stock primero"** — el `__editorItemTitle`
+ * real de `sortRules`, no el de `ordenamientos` ("Colegiales"). Es decir:
+ * **este panel edita `sortRules`**, no `ordenamientos`.
+ *
+ * NO VERIFICADO / GAP CONOCIDO (ver docs/issues/2026-09-08-agregar-criterio-sin-efecto.md):
+ * `criteriosDeOrdenAgregarButton` no tuvo ningun efecto observable al
+ * clickearlo (probado con locator por rol+nth, por bounding box, y por texto
+ * cercano - los tres casos, longitud de `body.innerText()` identica antes y
+ * despues). No es un problema de hidratacion (se probo con espera previa) ni
+ * de selector equivocado (se listaron los 4 AGREGAR presentes y se apunto al
+ * correcto por contexto de texto). La causa real no se investigo mas a fondo
+ * por costo/beneficio - todo el editor de criterio (nombreDelCriterioInput
+ * en adelante) queda SIN VERIFICAR en vivo.
  */
 export class SiteEditorOrderRulesPage {
   constructor(private readonly page: Page) {}
@@ -53,8 +62,20 @@ export class SiteEditorOrderRulesPage {
     return fieldByCaption(await this.frame(), 'Aplicar a la búsqueda por dirección');
   }
 
+  /**
+   * `.last()` esta MAL (probado): con la regla abierta hay 4 botones AGREGAR
+   * en el DOM (el panel raiz - Chips/Orden/Banner - sigue montado detras),
+   * y `.last()` no es el de Criterios de orden. Este locator ubica el
+   * correcto por el texto cercano en vez de por posicion/orden - resuelve a
+   * count:1, pero el click sobre el resultado no tuvo efecto observable
+   * (ver el comentario de clase). No usar sin resolver antes ese gap.
+   */
   async criteriosDeOrdenAgregarButton(): Promise<Locator> {
-    return (await this.frame()).getByRole('button', { name: 'AGREGAR' }).last();
+    const frame = await this.frame();
+    return frame
+      .locator('label, div', { has: frame.getByText('Criterios de orden (el primero manda)', { exact: true }) })
+      .getByRole('button', { name: 'AGREGAR' })
+      .first();
   }
 
   /** Único APLICAR visible en el editor de regla (antes de abrir un criterio). */
