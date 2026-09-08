@@ -26,6 +26,8 @@ Esto coincide con lo que `Plan_TestCases_Chips.md` (en `TQD-1128/`) ya señalaba
 
 **Pregunta abierta:** ¿cuál de los dos lee el componente en runtime? ¿Es `ordenamientos` un reemplazo en progreso de `sortRules` (o viceversa)? TC-CHIP-22 (convivencia filtro/orden) no debería asumir cuál de los dos está activo sin esa confirmación.
 
+**Actualización 2026-09-08 (misma fecha, con las capturas de `TQD-1128/orden-chips-site-editor.png`):** el panel real "Orden del listado de sucursales (retiro)" usa labels en español — Provincia donde aplica, Localidad donde aplica, Campo de MasterData, Campo de VTEX, Criterios de orden — que coinciden con el shape de `ordenamientos`, no con `sortRules` (inglés). Ver transcripción completa en `../vtex/site-editor-panels-transcripcion.md`. Esto es evidencia fuerte de que `ordenamientos` es el campo vigente y `sortRules` es legacy, pero **no es confirmación 100%**: no se inspeccionó el DOM en vivo del formulario ni se capturó el request de guardado. Antes de automatizar TC-CHIP-22 asumiendo `ordenamientos`, sería bueno una confirmación rápida de desarrollo.
+
 ## 4. Dos esquemas de banner coexistiendo: `banner` vs `banners`
 
 Mismo patrón: `banner` es un objeto singular (`bannerEnabled`, `bannerId`, `imageDesktop`, `imageMobile`, ...) y `banners` es un array (`enabled`, `image`, `imageAlt`, ...) con un elemento. Campos con nombres distintos para conceptos equivalentes (ej. `bannerEnabled` vs `enabled`, `imageDesktop`/`imageMobile` vs `image` único).

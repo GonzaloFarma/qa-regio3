@@ -1,9 +1,13 @@
 import { test as base } from '@playwright/test';
 import { SiteEditorChipsPage } from '../pages/site-editor-chips.page';
+import { SiteEditorRegionalizerPanelPage } from '../pages/site-editor-regionalizer-panel.page';
+import { SiteEditorOrderRulesPage } from '../pages/site-editor-order-rules.page';
 import { RegionalizadorBarPage } from '../pages/regionalizador-bar.page';
 
 interface FarmacityFixtures {
+  siteEditorRegionalizerPanel: SiteEditorRegionalizerPanelPage;
   siteEditorChips: SiteEditorChipsPage;
+  siteEditorOrderRules: SiteEditorOrderRulesPage;
   regionalizadorBar: RegionalizadorBarPage;
 }
 
@@ -16,8 +20,14 @@ interface FarmacityFixtures {
  * pegar contra el gate de admin-login.
  */
 export const test = base.extend<FarmacityFixtures>({
+  siteEditorRegionalizerPanel: async ({ page }, use) => {
+    await use(new SiteEditorRegionalizerPanelPage(page));
+  },
   siteEditorChips: async ({ page }, use) => {
     await use(new SiteEditorChipsPage(page));
+  },
+  siteEditorOrderRules: async ({ page }, use) => {
+    await use(new SiteEditorOrderRulesPage(page));
   },
   regionalizadorBar: async ({ page }, use) => {
     await use(new RegionalizadorBarPage(page));
